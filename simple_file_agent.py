@@ -19,50 +19,32 @@ def read_file(file_name:str):
 def exists(file_name:str):
     return os.path.exists(file_name)
 
-def parse_action(response: str):
-    match = re.search(r"```action\s*({.*?})\s*```", response, re.DOTALL)
+def extract_markdown_block(text: str, block_type: str) -> str:
+    """
+    Extracts a fenced markdown code block of the given type from the text.
+    For example, if block_type is "action", it looks for ```action ... ``` blocks.
+    """
+    pattern = rf"```{block_type}\n(.*?)\n```"
+    match = re.search(pattern, text, re.DOTALL)
     if match:
-        action_json = match.group(1)
-        return json.loads(action_json)
+        return match.group(1).strip()
     else:
-        raise ValueError("No valid action block found in response.")
+        raise ValueError(f"No markdown block of type '{block_type}' found.")
 
+def parse_action(response: str) -> Dict:
+    """Parse the LLM response into a structured action dictionary."""
+    try:
+        response = extract_markdown_block(response, "action")
+        response_json = json.loads(response)
+        if "tool_name" in response_json and "args" in response_json:
+            return response_json
+        else:
+            return {"tool_name": "error", "args": {"message": "You must respond with a JSON tool invocation."}}
+    except json.JSONDecodeError:
+        return {"tool_name": "error", "args": {"message": "Invalid JSON response. You must respond with a JSON tool invocation."}}
+    except ValueError:
+        return {"tool_name": "error", "args": {"message": "Invalid response. You must respond with action and a JSON tool invocation."}}
 
-# agent_rules = [{
-#     "role": "system",
-#     "content": """
-# You are an AI agent that can perform tasks by using available tools.
-
-# Available tools:
-# - list_files(folder:str='.') -> List[str]: List all files in the current or given directory.
-# - read_file(file_name: str) -> str: Read the content of a file.
-# - terminate(message: str): End the agent loop and print a summary to the user.
-
-# ⚠️ MANDATORY FILE CHECK FLOW:
-# If a user asks about a file:
-# - First call list_files() to get all available files. do not call read_file if not needed.
-# - Only then proceed to read_file() or terminate().
-# - do not read_file if a user is asking to list only, or not interested in contents of a file, or just asking if a file exists
-# - when terminating, give summary message
-
-# ⚠️ TEST FILE RULES:
-# - A test file must start with the prefix test (e.g., test_chat_agent.py)
-# - Files that do not start with test are not test files
-# - When checking for test files, list all files first, then filter by this rule
-# - Do not read or process files that do not match this rule
-
-
-# Every response MUST have an action in following format. 
-# Do NOT omit the triple backticks and action. Do NOT change `action` to match the tool name. The parser depends on this exact label.
-# The parser depends on this exact structure.
-# Respond in this format:
-
-# ```action
-# {
-#     "tool_name": "insert tool_name",
-#     "args": {...fill in any required arguments here...}
-# }
-# """}]
 
 agent_rules = [{
     "role": "system",
@@ -131,6 +113,7 @@ memory = [
     # {"role": "user", "content": "do i have a license"}
     # {"role": "user", "content": "do i have a gitignore"}
     {"role": "user", "content": "read license"}
+    # {"role": "user", "content": "how is the weather"}
 ]
 
 def generate_response(messages: List[Dict]) -> str:
