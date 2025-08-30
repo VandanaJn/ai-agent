@@ -16,10 +16,8 @@ def read_file(file_name:str):
     with open(file_name, 'r') as file:
         return file.read()
 
-def exists(file_name:str):
-    return os.path.exists(file_name)
 
-def extract_markdown_block(text: str, block_type: str) -> str:
+def extract_markdown_block_old(text: str, block_type: str) -> str:
     """
     Extracts a fenced markdown code block of the given type from the text.
     For example, if block_type is "action", it looks for ```action ... ``` blocks.
@@ -30,6 +28,19 @@ def extract_markdown_block(text: str, block_type: str) -> str:
         return match.group(1).strip()
     else:
         raise ValueError(f"No markdown block of type '{block_type}' found.")
+    
+def extract_markdown_block(response: str, block_type: str = "action") -> str:
+    """Extract code block from response"""
+
+    if not '```' in response:
+        return response
+
+    code_block = response.split('```')[1].strip()
+
+    if code_block.startswith(block_type):
+        code_block = code_block[len(block_type):].strip()
+
+    return code_block
 
 def parse_action(response: str) -> Dict:
     """Parse the LLM response into a structured action dictionary."""
@@ -110,9 +121,9 @@ max_iterations=4
 memory = [
     # {"role": "user", "content": "do i have a python test files in C:\learning\\ai-agent"}
     # {"role": "user", "content": "List .py files in C:\learning\\ai-agent"}
-    # {"role": "user", "content": "do i have a license"}
+    {"role": "user", "content": "do i have a license"}
     # {"role": "user", "content": "do i have a gitignore"}
-    {"role": "user", "content": "read license"}
+    # {"role": "user", "content": "read license"}
     # {"role": "user", "content": "how is the weather"}
 ]
 
