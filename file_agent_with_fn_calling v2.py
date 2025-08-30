@@ -1,6 +1,6 @@
 """
 AI agent using LiteLLM with function calling support.  
-Sends tool_calls explicitly in assistant messages based on the previous response.  
+Sends tool information as assistant message content from the previous response.
 Supports list_files, read_file, and terminate while preserving conversation history.
 """
 import json
@@ -113,40 +113,36 @@ while iterations < max_iterations:
         max_tokens=512,
     )
 
-    assistant_message = response.choices[0].message
-
-    if assistant_message.tool_calls:
-        tool = assistant_message.tool_calls[0]
+    if response.choices[0].message.tool_calls:
+        tool = response.choices[0].message.tool_calls[0]
         tool_name = tool.function.name
-        tool_args = json.loads(tool.function.arguments) if tool.function.arguments else {}
+        tool_args = json.loads(tool.function.arguments)
 
-        result = tool_functions[tool_name](**tool_args)
-
-        print(f"\n🔧 Tool Name: {tool_name}")
-        print(f"📥 Tool Arguments: {tool_args}")
-        print(f"📤 Result: {result}")
-
-        # Store assistant’s tool call
-        memory.append({
-            "role": "assistant",
-            "tool_calls": assistant_message.tool_calls,
-            "content": None,
-        })
-
-        # Store tool result with proper tool role
-        memory.append({
-            "role": "tool",
-            "tool_call_id": tool.id,   # ✅ this links result to the tool call
-            "content": str(result),
-        })
+        action = {
+            "tool_name": tool_name,
+            "args": tool_args
+        }
 
         if tool_name == "terminate":
-            print("\n✅ Agent terminated.")
+            print(f"Termination message: {tool_args['message']}")
             break
+        elif tool_name in tool_functions:
+            try:
+                result = {"result": tool_functions[tool_name](**tool_args)}
+            except Exception as e:
+                result = {"error":f"Error executing {tool_name}: {str(e)}"}
+        else:
+            result = {"error": f"Unknown tool: {tool_name}"}
 
+        print(f"Executing: {tool_name} with args {tool_args}")
+        print(f"Result: {result}")
+        memory.extend([
+            {"role": "assistant", "content": json.dumps(action)},
+            {"role": "user", "content": json.dumps(result)}
+        ])
     else:
-        print("\n💬 Assistant:", assistant_message.content)
-        memory.append({"role": "assistant", "content": assistant_message.content or ""})
-
+        result = response.choices[0].message.content
+        print(f"Response: {result}")
+        break
 
     iterations += 1
