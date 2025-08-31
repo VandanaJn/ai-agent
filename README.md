@@ -30,8 +30,12 @@ OPENAI_API_KEY=your_openai_key_here
 ### 4. Run an Agent
 
 ```bash
-python file_agent_with_fn_calling.py
+python file_agent_with_fn_calling_v2.py
 ```
+
+## 🖼️ Screenshot
+
+![sample Screenshot](https://github.com/VandanaJn/repo-common/blob/main/file_agent_output.png)
 
 ## 🛠️ Scripts Explained
 

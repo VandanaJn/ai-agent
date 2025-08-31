@@ -21,9 +21,9 @@ def terminate(message: str) -> None:
     print(f"Termination message: {message}")
 
 
-def list_files() -> List[str]:
+def list_files(path: str='.') -> List[str]:
     """List files in the current directory."""
-    return os.listdir(".")
+    return os.listdir(path)
 
 
 def read_file(file_name: str) -> str:
@@ -49,8 +49,8 @@ tools = [
         "type": "function",
         "function": {
             "name": "list_files",
-            "description": "Returns a list of files in the directory.",
-            "parameters": {"type": "object", "properties": {}, "required": []}
+            "description": "Returns a list of files in current directory or given path.",
+            "parameters": {"type": "object", "properties": {"path": {"type": "string"}}, "required": []}
         }
     },
     {
@@ -100,7 +100,7 @@ user_task = input("What would you like me to do? ")
 memory = [{"role": "user", "content": user_task}]
 
 # --- Agent loop ---
-max_iterations = 5
+max_iterations = 10
 iterations = 0
 
 while iterations < max_iterations:
