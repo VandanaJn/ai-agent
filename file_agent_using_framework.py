@@ -4,74 +4,75 @@ from core.agent_framework import (
     ActionRegistry,
     Agent,
     Goal,
-    generate_response, AgentLanguage, Environment
+    generate_response, AgentLanguage, Environment, register_tool,PythonActionRegistry
 )
 from typing import List
 import os
 
-# Define the agent's goals
-goals = [
-    Goal(priority=1, name="Gather Information", description="Read each python file in the project"),
-    Goal(priority=1, name="Terminate", description="Call the terminate call only when you have read all the python files "
-                                                    "and generate the content of the README in the terminate message")
-]
-
-# Define the agent's language
-agent_language = AgentFunctionCallingActionLanguage()
-
+# First, we'll define our tools using decorators
+@register_tool(tags=["file_operations", "read"])
 def read_project_file(name: str) -> str:
-    with open(name, "r", encoding="utf-8", errors="replace") as f:
+    """Reads and returns the content of a specified project file.
+
+    Opens the file in read mode and returns its entire contents as a string.
+    Raises FileNotFoundError if the file doesn't exist.
+
+    Args:
+        name: The name of the file to read
+
+    Returns:
+        The contents of the file as a string
+    """
+    with open(name, "r") as f:
         return f.read()
 
+@register_tool(tags=["file_operations", "list"])
 def list_project_files() -> List[str]:
-    return sorted([file for file in os.listdir(".") if file.endswith("file_agent_using_framework.py") or file.endswith("chat_agent.py")])
+    """Lists all Python files in the current project directory.
+
+    Scans the current directory and returns a sorted list of all files
+    that end with '.py'.
+
+    Returns:
+        A sorted list of Python filenames
+    """
+    return sorted([file for file in os.listdir(".")
+                    if file.endswith("file_agent_using_framework.py") or file.endswith("chat_agent.py")])
+
+@register_tool(tags=["system"], terminal=True)
+def terminate(message: str) -> str:
+    """Terminates the agent's execution with a final message.
+
+    Args:
+        message: The final message to return before terminating
+
+    Returns:
+        The message with a termination note appended
+    """
+    return f"{message}\nTerminating..."
 
 
-# Define the action registry and register some actions
-action_registry = ActionRegistry()
-action_registry.register(Action(
-    name="list_project_files",
-    function=list_project_files,
-    description="Lists all files in the project.",
-    parameters={},
-    terminal=False
-))
-action_registry.register(Action(
-    name="read_project_file",
-    function=read_project_file,
-    description="Reads a file from the project.",
-    parameters={
-        "type": "object",
-        "properties": {
-            "name": {"type": "string"}
-        },
-        "required": ["name"]
-    },
-    terminal=False
-))
-action_registry.register(Action(
-    name="terminate",
-    function=lambda message: f"{message}\nTerminating...",
-    description="Terminates the session and prints the message to the user.",
-    parameters={
-        "type": "object",
-        "properties": {
-            "message": {"type": "string"}
-        },
-        "required": []
-    },
-    terminal=True
-))
+# Define the agent's goals
+goals = [
+    Goal(priority=1,
+            name="Gather Information",
+            description="Read each file in the project in order to build a deep understanding of the project in order to write a README"),
+    Goal(priority=1,
+            name="Terminate",
+            description="Call terminate when done and provide a complete README for the project in the message parameter")
+]
 
-# Define the environment
-environment = Environment()
-
-# Create an agent instance
-agent = Agent(goals, agent_language, action_registry, generate_response, environment)
+# Create an agent instance with tag-filtered actions
+agent = Agent(
+    goals=goals,
+    agent_language=AgentFunctionCallingActionLanguage(),
+    # The ActionRegistry now automatically loads tools with these tags
+    action_registry=PythonActionRegistry(tags=["file_operations", "system"]),
+    generate_response=generate_response,
+    environment=Environment()
+)
 
 # Run the agent with user input
-user_input = "Write a README.md for this project."
+user_input = "Write a README for this project."
 final_memory = agent.run(user_input)
-
-# Print the final memory
-# print(final_memory.get_memories())
+print(final_memory.get_memories())

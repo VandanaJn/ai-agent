@@ -39,13 +39,14 @@ python file_agent_with_fn_calling_v2.py
 
 ## 🛠️ Scripts Explained
 
-| Script                             | Description                                               |
-|-----------------------------------|-----------------------------------------------------------|
-| `chat_agent.py`                   | A basic conversational agent using AI                     |
-| `simple_file_agent.py`            | Handles file input/output without function calling        |
-| `file_agent_with_fn_calling.py`   | Adds function calling to enhance file handling            |
-| `file_agent_with_fn_calling_v2.py`| Improved version with more robust function calling        |
-| `generate_python_code.py`         | Generates Python code from natural language prompts       |
+| Script                             | Description                                                              |
+|-----------------------------------|---------------------------------------------------------------------------|
+| `chat_agent.py`                   | A basic conversational agent using AI                                     |
+| `simple_file_agent.py`            | Handles file input/output without function calling                        |
+| `file_agent_with_fn_calling.py`   | Adds function calling to enhance file handling                            |
+| `file_agent_with_fn_calling_v2.py`| Improved version with more robust function calling                        |
+| `file_agent_using_framework.py`   | It uses a general purpose agent framework and generates txt for readme    |
+| `generate_python_code.py`         | Generates Python code from natural language prompts                       |
 
 ## 📄 License
 
