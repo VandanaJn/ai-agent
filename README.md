@@ -68,7 +68,7 @@ streamlit run streamlit_apps/file_agent_app.py
 ## 🖼️ Screenshot
 
 ![sample Screenshot](https://github.com/VandanaJn/repo-common/blob/main/file_agent_output.png)
-![sample Screenshot](https://github.com/VandanaJn/repo-common/blob/main/ffile_readme_agent_screenshot.png)
+![sample Screenshot](https://github.com/VandanaJn/repo-common/blob/main/file_readme_agent_screenshot.png)
 
 
 
