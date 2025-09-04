@@ -18,25 +18,7 @@ if user_input:
         # Run the agent
         final_memory, result = agent.run(user_input)
 
-        # Extract the latest text from memory
-    #     result_str = ""
-    #     if hasattr(final_memory, "get_memories"):
-    #         memories = final_memory.get_memories()
-    #         if memories:
-    #             last_content = memories[-1].get("content", [])
-    #             if isinstance(last_content, list) and len(last_content) > 0:
-    #                 # Extract the text string safely
-    #                 text_obj = last_content[0]
-    #                 if isinstance(text_obj, dict) and "text" in text_obj:
-    #                     result_str = text_obj["text"]
-    #     elif isinstance(final_memory, dict) and "result" in final_memory:
-    #         result_str = final_memory["result"]
-    #     else:
-    #         result_str = str(final_memory)
-
-    #     # Clean up redundant 'Terminating...' if present
-    #     result_str = result_str.replace("Terminating...", "").strip()
-
+ 
     except Exception as e:
         result_str = f"Error: {e}"
 
