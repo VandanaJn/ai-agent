@@ -57,23 +57,24 @@ class ChatSession:
         for msg in self.messages:
             print(f"{msg['role'].upper()}: {msg['content']}\n")
 
-chat = ChatSession("You are a helpful assistant who explains things clearly and write clean code don't describe too much.")
 
-chat.user_message("What is a lambda function in Python?")
-print(chat.get_response())
+if __name__ == "__main__":
+    chat = ChatSession("You are a helpful assistant who explains things clearly and write clean code don't describe too much.")
+    chat.user_message("What is a lambda function in Python?")
+    print(chat.get_response())
 
-chat.user_message("Can you give me an example?")
-print(chat.get_response())
+    chat.user_message("Can you give me an example?")
+    print(chat.get_response())
 
-import json
+    import json
 
-code_spec = {
-    'name': 'swap_keys_values',
-    'description': 'Swaps the keys and values in a given dictionary.',
-    'params': {
-        'd': 'A dictionary with unique values.'
-    },
-}
-chat.user_message(f"Please implement: {json.dumps(code_spec)}")
-print(chat.get_response())
+    code_spec = {
+        'name': 'swap_keys_values',
+        'description': 'Swaps the keys and values in a given dictionary.',
+        'params': {
+            'd': 'A dictionary with unique values.'
+        },
+    }
+    chat.user_message(f"Please implement: {json.dumps(code_spec)}")
+    print(chat.get_response())
 # chat.show_history()  # Optional: see the full conversation

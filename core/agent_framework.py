@@ -506,4 +506,4 @@ class Agent:
             if self.should_terminate(response):
                 break
 
-        return memory
+        return memory, result

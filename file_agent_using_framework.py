@@ -23,7 +23,7 @@ def read_project_file(name: str) -> str:
     Returns:
         The contents of the file as a string
     """
-    with open(name, "r") as f:
+    with open(name, "r", encoding="utf-8", errors="replace") as f:
         return f.read()
 
 @register_tool(tags=["file_operations", "list"])
@@ -37,7 +37,7 @@ def list_project_files() -> List[str]:
         A sorted list of Python filenames
     """
     return sorted([file for file in os.listdir(".")
-                    if file.endswith("file_agent_using_framework.py") or file.endswith("chat_agent.py")])
+                    if file.endswith(".py") or file.endswith("task_summarizer_agent.py")])
 
 @register_tool(tags=["system"], terminal=True)
 def terminate(message: str) -> str:
@@ -56,7 +56,7 @@ def terminate(message: str) -> str:
 goals = [
     Goal(priority=1,
             name="Gather Information",
-            description="Read each file in the project in order to build a deep understanding of the project in order to write a README"),
+            description="Read each file in the project in order to build a deep understanding of the project in order to write a README or description"),
     Goal(priority=1,
             name="Terminate",
             description="Call terminate when done and provide a complete README for the project in the message parameter")
@@ -72,7 +72,8 @@ agent = Agent(
     environment=Environment()
 )
 
-# Run the agent with user input
-user_input = "Write a README for this project."
-final_memory = agent.run(user_input)
-print(final_memory.get_memories())
+if __name__ == "__main__":
+    # Run the agent with user input
+    user_input = "Write a README for this project."
+    final_memory, result = agent.run(user_input)
+    # print(final_memory.get_memories())

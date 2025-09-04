@@ -1,2 +1,3 @@
 python-dotenv
 litellm
+streamlit
