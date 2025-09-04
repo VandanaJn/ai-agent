@@ -1,5 +1,5 @@
 import streamlit as st
-from chat_agent import ChatSession
+from cli_agents.chat_agent import ChatSession
 
 def main():
     st.title("Chat Agent with LiteLLM")

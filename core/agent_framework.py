@@ -451,7 +451,9 @@ class Agent:
 
     def get_action(self, response):
         invocation = self.agent_language.parse_response(response)
+        
         action = self.actions.get_action(invocation["tool"])
+        print (action.name)
         return action, invocation
 
     def should_terminate(self, response: str) -> bool:
@@ -483,7 +485,7 @@ class Agent:
         memory = memory or Memory()
         self.set_current_task(memory, user_input)
 
-        for _ in range(max_iterations):
+        for i in range(max_iterations):
             # Construct a prompt that includes the Goals, Actions, and the current Memory
             prompt = self.construct_prompt(self.goals, memory, self.actions)
 
@@ -501,6 +503,8 @@ class Agent:
 
             # Update the agent's memory with information about what happened
             self.update_memory(memory, response, result)
+            
+            print(f"iteration {i}")
 
             # Check if the agent has decided to terminate
             if self.should_terminate(response):

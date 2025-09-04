@@ -1,5 +1,4 @@
 import streamlit as st
-from file_agent_using_framework import Agent, generate_response, Goal, Environment
 from core.agent_framework import (
     AgentFunctionCallingActionLanguage,
     Action,
@@ -8,6 +7,7 @@ from core.agent_framework import (
     Goal,
     generate_response, AgentLanguage, Environment, register_tool,PythonActionRegistry
 )
+from cli_agents.file_agent_using_framework import Agent
 # Initialize session state
 if 'history' not in st.session_state:
     st.session_state.history = []
@@ -33,9 +33,25 @@ if user_input:
 
     # Define agent's goals
     goals = [
-        Goal(priority=1, name="Gather Information", description="Read each file in the project to build a deep understanding."),
-        Goal(priority=1, name="Terminate", description="Call terminate when done and provide a complete README for the asked project in the message parameter.")
-    ]
+    Goal(
+        priority=1,
+        name="Gather Information",
+        description=(
+            "Use list dir, list file and read file tools to examine all files "
+            "Collect understanding of the project from the file contents, donot execute any python script."
+            "do not assume files, list them and read them by using tools provided "
+        )
+    ),
+    Goal(
+        priority=1,
+        name="Terminate",
+        description=(
+            "When you have finished gathering information, call terminate. "
+            "The terminate message should ONLY contain a clear, well-structured README "
+            "or description for the project. Do not include tool calls or JSON in this message."
+        )
+    )
+]
 
     # Create agent instance
     agent = Agent(

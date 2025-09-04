@@ -1,52 +1,96 @@
 # 🤖 AI Agent Project
 
-Welcome to the **AI Agent** repository — a sandbox for exploring how to build intelligent agents using Python and AI models. This project demonstrates various approaches to creating agents that can chat, handle files, and even generate code.
+A modular framework for building intelligent agents using Python, natural language processing, and tool orchestration. Supports both CLI and Streamlit interfaces for interacting with agents that perform file operations, generate code, and summarize tasks.
 
-## 🚀 Getting Started
+---
 
-### 1. Clone the Repository
+## 📦 Installation
 
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/VandanaJn/ai-agent.git
+   cd ai-agent
+   ```
+
+2. **Set up a virtual environment**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
+
+3. **Install the package and dependencies**
+   ```bash
+   pip install -e .
+   pip install -r requirements.txt
+   ```
+
+4. **Configure your OpenAI API key**
+   Create a `.env` file in the root directory:
+   ```
+   OPENAI_API_KEY=your_openai_key_here
+   ```
+
+---
+
+## 🗂️ Folder Structure
+
+- `cli_agents/` — CLI-based agents for chat, file operations, code generation, and task summaries  
+- `core/` — Agent framework: base classes, tool registration, and orchestration  
+- `streamlit_apps/` — Web apps for interacting with agents via Streamlit
+
+---
+
+## 🧠 Key Scripts
+
+- `chat_agent.py` — Conversational agent using LiteLLM  
+- `file_agent_with_fn_calling_v2.py` — Enhanced file agent with robust function calling  
+- `file_agent_using_framework.py` — Agent built on a reusable framework  
+- `generate_python_code.py` — Generates Python code from natural language prompts  
+- `task_summarizer_agent.py` — Summarizes tasks and content from files  
+- `chat_app.py` — Streamlit web app for chatting with the AI assistant  
+- `file_agent_app.py` — Streamlit web app for file-based agent interactions, it can generate readme and describe python files
+- `agent_framework.py` — Implements an agent framework providing the base classes for actions, tools registration, and agent functionality.
+
+---
+
+## 🚀 Usage
+
+### 🖥️ Run CLI agents
 ```bash
-git clone https://github.com/VandanaaJn/AI_agent.git
-cd ai-agent
+python cli_agents/file_agent_with_fn_calling_v2.py
 ```
 
-### 2. Set Up the Environment
-
+### 🌐 Launch Streamlit apps
 ```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### 3. Configure Environment Variable
-
-Create a `.env` file and add your API key:
-
-```env
-OPENAI_API_KEY=your_openai_key_here
-```
-
-### 4. Run an Agent
-
-```bash
-python file_agent_with_fn_calling_v2.py
+streamlit run streamlit_apps/file_agent_app.py
 ```
 
 ## 🖼️ Screenshot
 
 ![sample Screenshot](https://github.com/VandanaJn/repo-common/blob/main/file_agent_output.png)
+![sample Screenshot](https://github.com/VandanaJn/repo-common/blob/main/ffile_readme_agent_screenshot.png)
 
-## 🛠️ Scripts Explained
 
-| Script                             | Description                                                              |
-|-----------------------------------|---------------------------------------------------------------------------|
-| `chat_agent.py`                   | A basic conversational agent using AI                                     |
-| `simple_file_agent.py`            | Handles file input/output without function calling                        |
-| `file_agent_with_fn_calling.py`   | Adds function calling to enhance file handling                            |
-| `file_agent_with_fn_calling_v2.py`| Improved version with more robust function calling                        |
-| `file_agent_using_framework.py`   | It uses a general purpose agent framework and generates txt for readme    |
-| `generate_python_code.py`         | Generates Python code from natural language prompts                       |
+
+---
+
+## 📋 Requirements
+
+- Python 3.8+
+- Streamlit
+- LiteLLM
+- python-dotenv
+
+---
+
+## 🧩 Extensibility
+
+This framework is modular and extensible. You can:
+- Add new tools and agents by subclassing the base framework
+- Integrate additional APIs or models
+- Deploy agents via CLI, Streamlit, or other interfaces
+
+---
 
 ## 📄 License
 
