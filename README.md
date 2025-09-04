@@ -59,6 +59,9 @@ A modular framework for building intelligent agents using Python, natural langua
 ```bash
 python cli_agents/file_agent_with_fn_calling_v2.py
 ```
+## 🖼️ Screenshot
+
+![sample Screenshot](https://github.com/VandanaJn/repo-common/blob/main/file_agent_output.png)
 
 ### 🌐 Launch Streamlit apps
 ```bash
@@ -67,7 +70,6 @@ streamlit run streamlit_apps/file_agent_app.py
 
 ## 🖼️ Screenshot
 
-![sample Screenshot](https://github.com/VandanaJn/repo-common/blob/main/file_agent_output.png)
 ![sample Screenshot](https://github.com/VandanaJn/repo-common/blob/main/file_readme_agent_screenshot.png)
 
 
