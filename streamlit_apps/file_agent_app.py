@@ -33,25 +33,30 @@ if user_input:
 
     # Define agent's goals
     goals = [
-    Goal(
-        priority=1,
-        name="Gather Information",
-        description=(
-            "Use list dir, list file and read file tools to examine all files "
-            "Collect understanding of the project from the file contents, donot execute any python script."
-            "do not assume files, list them and read them by using tools provided "
+        Goal(
+            priority=1,
+            name="Gather Information",
+            description=(
+                "Explore all directories and read all files recursively in the project. "
+                "List all folders and read all files (do not execute code). "
+                "Do not skip files even if a folder has no subfolders. "
+                "Collect all information needed to produce a complete and accurate README. "
+                "Keep track of every file read."
+                "do not assume file names or file contents, read them by given tools which framework will execute"
+            )
+        ),
+        Goal(
+            priority=1,
+            name="Terminate",
+            description=(
+                "Only terminate after ALL files have been read. "
+                "The terminate message must ONLY contain a complete, clean, well-structured README "
+                "in plain English. Do not include JSON, raw tool outputs, or tool calls. "
+                "Include sections like Introduction, Features, File Structure, and How to Run."
+            )
         )
-    ),
-    Goal(
-        priority=1,
-        name="Terminate",
-        description=(
-            "When you have finished gathering information, call terminate. "
-            "The terminate message should ONLY contain a clear, well-structured README "
-            "or description for the project. Do not include tool calls or JSON in this message."
-        )
-    )
-]
+    ]
+
 
     # Create agent instance
     agent = Agent(
